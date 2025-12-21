@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>yablonevoe-derevo</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app">
+        <video id="videoPlayer" playsinline></video>
+        <div id="scene1" class="scene active">
+            <div class="overlay">
+                <button id="startButton" class="btn-animated">
+                    <span class="btn-text">Прикоснись к секрету Миравис</span>
+                    <div class="btn-glow"></div>
+                </button>
+            </div>
+        </div>
+
+        <div id="scene2" class="scene">
+            <div id="scrollContainer" class="scroll-container">
+                <div class="scroll-spacer"></div>
+            </div>
+            
+            <div id="scrollInstructions" class="scroll-instructions">
+                <div class="scroll-arrow">↓</div>
+                <p>Скроллите вниз</p>
+                <div class="scroll-arrow">↓</div>
+            </div>
+
+            <div id="scrollProgress" class="scroll-progress">
+                <div class="progress-track">
+                    <div class="progress-fill"></div>
+                </div>
+            </div>
+
+            <div class="overlay">
+                <button id="continueButton1" class="btn-animated hidden">
+                    <span class="btn-text">Продолжить</span>
+                    <div class="btn-glow"></div>
+                </button>
+            </div>
+        </div>
+
+        <div id="scene3" class="scene">
+        </div>
+
+        <div id="loader" class="loader">
+            <div class="spinner"></div>
+            <p>Загрузка...</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
