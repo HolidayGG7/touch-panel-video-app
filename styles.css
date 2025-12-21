@@ -125,7 +125,7 @@ body {
 }
 
 .btn-animated::before {
-    content: '';
+    /* content: ''; */
     position: absolute;
     top: 50%;
     left: 50%;
@@ -267,29 +267,44 @@ body {
 
 .confetti {
     position: absolute;
-    width: 12px;
-    height: 12px;
-    background: #4169E1;
+    width: 20px;
+    height: 20px;
+    background: radial-gradient(circle at 30% 30%, rgba(135, 206, 250, 0.9), rgba(65, 105, 225, 0.5));
     border-radius: 50%;
     opacity: 0;
-    --moveX: 0px;
-    --moveY: 0px;
-    animation: confettiExplode 1.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-    box-shadow: 0 0 10px rgba(65, 105, 225, 0.6);
+    --drift: 0px;
+    animation: bubbleFloat 3.5s ease-out forwards;
+    box-shadow:
+        inset -4px -4px 8px rgba(255, 255, 255, 0.4),
+        inset 2px 2px 4px rgba(65, 105, 225, 0.3),
+        0 0 20px rgba(65, 105, 225, 0.3);
+    border: 2px solid rgba(255, 255, 255, 0.4);
 }
 
-@keyframes confettiExplode {
+@keyframes bubbleFloat {
     0% {
-        opacity: 1;
-        transform: translate(0, 0) rotate(0deg) scale(1);
+        opacity: 0;
+        transform: translate(0, 0) scale(0.2);
     }
-    50% {
-        opacity: 1;
-        transform: translate(var(--moveX), calc(var(--moveY) * 0.5)) rotate(360deg) scale(1.2);
+    15% {
+        opacity: 0.9;
+        transform: translate(var(--drift), -30px) scale(1);
+    }
+    40% {
+        opacity: 0.7;
+        transform: translate(calc(var(--drift) * 2), -120px) scale(1.15);
+    }
+    70% {
+        opacity: 0.4;
+        transform: translate(calc(var(--drift) * 3), -250px) scale(1.05);
+    }
+    90% {
+        opacity: 0.1;
+        transform: translate(calc(var(--drift) * 3.5), -350px) scale(0.7);
     }
     100% {
         opacity: 0;
-        transform: translate(calc(var(--moveX) * 0.8), calc(var(--moveY) + 400px)) rotate(720deg) scale(0.2);
+        transform: translate(calc(var(--drift) * 4), -420px) scale(0.3);
     }
 }
 
@@ -329,7 +344,7 @@ button:focus {
 }
 
 .btn-animated::after {
-    content: '';
+    /* content: ''; */
     position: absolute;
     top: 0;
     left: -100%;

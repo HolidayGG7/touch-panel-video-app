@@ -178,40 +178,44 @@ class AppleOrchardApp {
         const buttonCenterX = buttonRect.left + buttonRect.width / 2;
         const buttonCenterY = buttonRect.top + buttonRect.height / 2;
 
-        // Создаем 50 конфетти-частиц
-        for (let i = 0; i < 50; i++) {
-            const confetti = document.createElement('div');
-            confetti.className = 'confetti';
+        // Создаем 40 пузырьков
+        for (let i = 0; i < 40; i++) {
+            const bubble = document.createElement('div');
+            bubble.className = 'confetti';
 
-            // Случайное начальное положение вокруг кнопки
-            const angle = (Math.PI * 2 * i) / 50;
-            const velocity = 100 + Math.random() * 100;
-            const startX = buttonCenterX + Math.cos(angle) * 20;
-            const startY = buttonCenterY + Math.sin(angle) * 20;
+            // Случайное положение вокруг кнопки (сзади)
+            const spreadX = (Math.random() - 0.5) * 200; // Разброс по X
+            const spreadY = (Math.random() - 0.5) * 80;  // Небольшой разброс по Y
+            const startX = buttonCenterX + spreadX;
+            const startY = buttonCenterY + spreadY;
 
-            confetti.style.left = startX + 'px';
-            confetti.style.top = startY + 'px';
+            bubble.style.left = startX + 'px';
+            bubble.style.top = startY + 'px';
 
-            // Случайная задержка и длительность анимации
-            confetti.style.animationDelay = Math.random() * 0.2 + 's';
-            confetti.style.animationDuration = 1.5 + Math.random() * 0.5 + 's';
+            // Случайная задержка появления
+            bubble.style.animationDelay = Math.random() * 0.8 + 's';
 
-            // Добавляем случайное направление через CSS переменные
-            const moveX = Math.cos(angle) * velocity;
-            const moveY = Math.sin(angle) * velocity - 200; // Вверх сильнее
+            // Случайная длительность (пузырьки летят с разной скоростью)
+            bubble.style.animationDuration = 2.5 + Math.random() * 1.5 + 's';
 
-            confetti.style.setProperty('--moveX', moveX + 'px');
-            confetti.style.setProperty('--moveY', moveY + 'px');
+            // Случайный дрейф влево-вправо (как пузырьки плывут)
+            const drift = (Math.random() - 0.5) * 150;
+            bubble.style.setProperty('--drift', drift + 'px');
 
-            confettiContainer.appendChild(confetti);
+            // Случайный размер пузырьков
+            const size = 15 + Math.random() * 15;
+            bubble.style.width = size + 'px';
+            bubble.style.height = size + 'px';
 
-            // Удаляем конфетти после анимации
+            confettiContainer.appendChild(bubble);
+
+            // Удаляем пузырёк после анимации
             setTimeout(() => {
-                confetti.remove();
-            }, 2500);
+                bubble.remove();
+            }, 4500);
         }
 
-        console.log('🎉 Конфетти запущено!');
+        console.log('🫧 Пузырьки запущены!');
     }
 
     //loop
