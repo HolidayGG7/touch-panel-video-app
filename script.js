@@ -1,15 +1,31 @@
+const isMobileDevice = () => {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) 
+           || (window.innerWidth <= 768);
+};
+
+const checkMobile = isMobileDevice();
 //conf
 const CONFIG = {
-    videos: {
-        loop: 'videos/loop.mp4',      
-        part2: 'videos/part2.mp4', 
-        part3: 'videos/part3.mp4'   
+    mobile: {
+        loop: 'videos/mobile_scene1.mp4',
+        part2: 'videos/mobile_scene2.mp4',
+        part3: 'videos/mobile_scene3.mp4'
+    },
+    desktop: {
+        loop: 'videos/pc_scene1.mp4',
+        part2: 'videos/pc_scene2.mp4',
+        part3: 'videos/pc_scene3.mp4'
+    },
+    get videos() {
+        return checkMobile ? this.mobile : this.desktop;
     },
     autoStartFullscreen: true,      
     soundEnabled: true,        
     scrollVideoEnabled: true,     
     scrollSensitivity: 1.0          
 };
+
+
 
 //dom el
 
@@ -140,7 +156,7 @@ class AppleOrchardApp {
         const { buttons, startAppButton } = elements;
 
         // Кнопка "Поехали" в loader
-        startAppButton.addEventListener('click', () => this.onStartAppClick());
+        startAppButton.addEventListener('click', (e) => this.onStartAppClick(e));
 
         //start
         buttons.start.addEventListener('click', () => this.onStartClick());
@@ -149,8 +165,11 @@ class AppleOrchardApp {
         buttons.continue1.addEventListener('click', () => this.onContinue1Click());
     }
 
-    onStartAppClick() {
+    onStartAppClick(e) {
         console.log('👆 Клик: Поехали!');
+
+        // Создаем ripple эффект
+        this.createRipple(e);
 
         // Запускаем конфетти
         this.createConfetti();
@@ -171,6 +190,27 @@ class AppleOrchardApp {
         }, 600);
     }
 
+    createRipple(event) {
+        const button = event.currentTarget;
+        const ripple = document.createElement('span');
+        const rect = button.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height);
+        const x = event.clientX - rect.left - size / 2;
+        const y = event.clientY - rect.top - size / 2;
+
+        ripple.style.width = ripple.style.height = size + 'px';
+        ripple.style.left = x + 'px';
+        ripple.style.top = y + 'px';
+        ripple.classList.add('ripple');
+
+        button.appendChild(ripple);
+
+        // Удаляем ripple после анимации
+        setTimeout(() => {
+            ripple.remove();
+        }, 600);
+    }
+
     createConfetti() {
         const confettiContainer = document.getElementById('confettiContainer');
         const button = elements.startAppButton;
@@ -178,44 +218,43 @@ class AppleOrchardApp {
         const buttonCenterX = buttonRect.left + buttonRect.width / 2;
         const buttonCenterY = buttonRect.top + buttonRect.height / 2;
 
-        // Создаем 40 пузырьков
-        for (let i = 0; i < 40; i++) {
-            const bubble = document.createElement('div');
-            bubble.className = 'confetti';
+        // Создаем 30 розовых конфетти
+        for (let i = 0; i < 30; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'confetti';
 
-            // Случайное положение вокруг кнопки (сзади)
-            const spreadX = (Math.random() - 0.5) * 200; // Разброс по X
-            const spreadY = (Math.random() - 0.5) * 80;  // Небольшой разброс по Y
-            const startX = buttonCenterX + spreadX;
-            const startY = buttonCenterY + spreadY;
+            // Стартовая позиция - центр кнопки
+            particle.style.left = buttonCenterX + 'px';
+            particle.style.top = buttonCenterY + 'px';
 
-            bubble.style.left = startX + 'px';
-            bubble.style.top = startY + 'px';
+            // Случайный угол разлета (360 градусов)
+            const angle = Math.random() * Math.PI * 2; // Радианы
+            const distance = 80 + Math.random() * 80; // Расстояние разлета
 
-            // Случайная задержка появления
-            bubble.style.animationDelay = Math.random() * 0.8 + 's';
+            // Вычисляем конечную позицию
+            const endX = Math.cos(angle) * distance;
+            const endY = Math.sin(angle) * distance;
 
-            // Случайная длительность (пузырьки летят с разной скоростью)
-            bubble.style.animationDuration = 2.5 + Math.random() * 1.5 + 's';
+            particle.style.setProperty('--endX', endX + 'px');
+            particle.style.setProperty('--endY', endY + 'px');
 
-            // Случайный дрейф влево-вправо (как пузырьки плывут)
-            const drift = (Math.random() - 0.5) * 150;
-            bubble.style.setProperty('--drift', drift + 'px');
+            // Случайная задержка
+            particle.style.animationDelay = Math.random() * 0.1 + 's';
 
-            // Случайный размер пузырьков
-            const size = 15 + Math.random() * 15;
-            bubble.style.width = size + 'px';
-            bubble.style.height = size + 'px';
+            // Случайный размер (маленькие точки)
+            const size = 6 + Math.random() * 6;
+            particle.style.width = size + 'px';
+            particle.style.height = size + 'px';
 
-            confettiContainer.appendChild(bubble);
+            confettiContainer.appendChild(particle);
 
-            // Удаляем пузырёк после анимации
+            // Удаляем частицу после анимации
             setTimeout(() => {
-                bubble.remove();
-            }, 4500);
+                particle.remove();
+            }, 1200);
         }
 
-        console.log('🫧 Пузырьки запущены!');
+        console.log('🎉 Конфетти запущено!');
     }
 
     //loop
@@ -341,6 +380,8 @@ class AppleOrchardApp {
         if (!scrollVideoActive) return;
         
         console.log('✅ Scroll Video завершен');
+        
+        document.getElementById('scrollInstructions').style.display = "none";
         
         // otklyuchaem
         this.disableScrollVideo();

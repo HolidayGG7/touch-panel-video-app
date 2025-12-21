@@ -59,9 +59,10 @@ body {
     width: 100%;
     height: 100%;
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     justify-content: center;
     background: rgba(0, 0, 0, 0.2);
+    padding: 50px 0;
 }
 
 .btn-animated {
@@ -124,31 +125,36 @@ body {
     }
 }
 
-.btn-animated::before {
-    /* content: ''; */
+#continueButton1
+{
+    position: relative;
+    overflow: hidden;
+    background: transparent;
+    border-radius: 5px;
+    padding: 30px 100px;
+    border: 3px solid #fff;
+    color: #fff;
+}
+#continueButton1:hover
+{
+    border: none;
+}
+
+#continueButton1::before
+{
+    content: "";
     position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.5);
-    transform: translate(-50%, -50%);
-    transition: width 0.6s, height 0.6s;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: -100%;
+    background-color: #4682B4;
+    z-index: -1;
+    transition: .2s;
 }
 
-.btn-animated:active::before {
-    width: 300px;
-    height: 300px;
-}
-
-#continueButton1 {
-    background: linear-gradient(135deg, #56ab2f 0%, #a8e063 100%);
-    box-shadow: 0 10px 30px rgba(86, 171, 47, 0.4);
-}
-
-#continueButton1:hover {
-    box-shadow: 0 15px 40px rgba(86, 171, 47, 0.6);
+#continueButton1:hover::before {
+    left: 0;
 }
 
 .hidden {
@@ -222,13 +228,14 @@ body {
 }
 
 .loader-button {
-    margin-top: 20px;
     background: #4169E1;
     box-shadow: 0 10px 30px rgba(65, 105, 225, 0.4);
     animation: slideUp 0.6s ease-out;
     transition: all 0.3s ease;
     position: relative;
-    overflow: visible;
+    overflow: hidden;
+    border-radius: 5px;
+    z-index: 2;
 }
 
 .loader-button:hover {
@@ -253,6 +260,23 @@ body {
     }
 }
 
+/* Ripple effect */
+.ripple {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.6);
+    transform: scale(0);
+    animation: rippleAnimation 0.6s ease-out;
+    pointer-events: none;
+}
+
+@keyframes rippleAnimation {
+    to {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
+
 /* Конфетти */
 .confetti-container {
     position: fixed;
@@ -263,48 +287,35 @@ body {
     pointer-events: none;
     z-index: 10000;
     overflow: hidden;
+    z-index: 1;
 }
 
 .confetti {
     position: absolute;
-    width: 20px;
-    height: 20px;
-    background: radial-gradient(circle at 30% 30%, rgba(135, 206, 250, 0.9), rgba(65, 105, 225, 0.5));
+    width: 8px;
+    height: 8px;
+    background: #FF1493;
     border-radius: 50%;
-    opacity: 0;
-    --drift: 0px;
-    animation: bubbleFloat 3.5s ease-out forwards;
-    box-shadow:
-        inset -4px -4px 8px rgba(255, 255, 255, 0.4),
-        inset 2px 2px 4px rgba(65, 105, 225, 0.3),
-        0 0 20px rgba(65, 105, 225, 0.3);
-    border: 2px solid rgba(255, 255, 255, 0.4);
+    opacity: 1;
+    --endX: 0px;
+    --endY: 0px;
+    animation: confettiExplode 1s ease-out forwards;
+    box-shadow: 0 0 10px rgba(255, 20, 147, 0.6);
+    z-index: 10001;
 }
 
-@keyframes bubbleFloat {
+@keyframes confettiExplode {
     0% {
-        opacity: 0;
-        transform: translate(0, 0) scale(0.2);
+        opacity: 1;
+        transform: translate(-50%, -50%) translate(0, 0) scale(0);
     }
-    15% {
-        opacity: 0.9;
-        transform: translate(var(--drift), -30px) scale(1);
-    }
-    40% {
-        opacity: 0.7;
-        transform: translate(calc(var(--drift) * 2), -120px) scale(1.15);
-    }
-    70% {
-        opacity: 0.4;
-        transform: translate(calc(var(--drift) * 3), -250px) scale(1.05);
-    }
-    90% {
-        opacity: 0.1;
-        transform: translate(calc(var(--drift) * 3.5), -350px) scale(0.7);
+    20% {
+        opacity: 1;
+        transform: translate(-50%, -50%) translate(0, 0) scale(1);
     }
     100% {
         opacity: 0;
-        transform: translate(calc(var(--drift) * 4), -420px) scale(0.3);
+        transform: translate(-50%, -50%) translate(var(--endX), var(--endY)) scale(0.3);
     }
 }
 
@@ -469,4 +480,21 @@ button:focus {
     .progress-track {
         height: 300px;
     }
+}
+
+
+
+#startButton
+{
+    padding: 30px;
+    background: transparent;
+    border: 3px solid #fff;
+    box-shadow: none;
+    border-radius: 5px;
+    transition: .2s;
+}
+#startButton:hover
+{
+    background-color: #fff;
+    color: #4682B4;
 }
