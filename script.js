@@ -152,17 +152,66 @@ class AppleOrchardApp {
     onStartAppClick() {
         console.log('👆 Клик: Поехали!');
 
-        // Скрываем loader
-        this.hideLoader();
+        // Запускаем конфетти
+        this.createConfetti();
 
-        // Подготавливаем первую сцену
-        this.prepareScene1();
+        // Небольшая задержка перед скрытием loader
+        setTimeout(() => {
+            // Скрываем loader
+            this.hideLoader();
 
-        // Запускаем loop видео
-        const { video } = elements;
-        video.play().catch(err => {
-            console.log('⚠️ Автоплей заблокирован:', err);
-        });
+            // Подготавливаем первую сцену
+            this.prepareScene1();
+
+            // Запускаем loop видео
+            const { video } = elements;
+            video.play().catch(err => {
+                console.log('⚠️ Автоплей заблокирован:', err);
+            });
+        }, 600);
+    }
+
+    createConfetti() {
+        const confettiContainer = document.getElementById('confettiContainer');
+        const button = elements.startAppButton;
+        const buttonRect = button.getBoundingClientRect();
+        const buttonCenterX = buttonRect.left + buttonRect.width / 2;
+        const buttonCenterY = buttonRect.top + buttonRect.height / 2;
+
+        // Создаем 50 конфетти-частиц
+        for (let i = 0; i < 50; i++) {
+            const confetti = document.createElement('div');
+            confetti.className = 'confetti';
+
+            // Случайное начальное положение вокруг кнопки
+            const angle = (Math.PI * 2 * i) / 50;
+            const velocity = 100 + Math.random() * 100;
+            const startX = buttonCenterX + Math.cos(angle) * 20;
+            const startY = buttonCenterY + Math.sin(angle) * 20;
+
+            confetti.style.left = startX + 'px';
+            confetti.style.top = startY + 'px';
+
+            // Случайная задержка и длительность анимации
+            confetti.style.animationDelay = Math.random() * 0.2 + 's';
+            confetti.style.animationDuration = 1.5 + Math.random() * 0.5 + 's';
+
+            // Добавляем случайное направление через CSS переменные
+            const moveX = Math.cos(angle) * velocity;
+            const moveY = Math.sin(angle) * velocity - 200; // Вверх сильнее
+
+            confetti.style.setProperty('--moveX', moveX + 'px');
+            confetti.style.setProperty('--moveY', moveY + 'px');
+
+            confettiContainer.appendChild(confetti);
+
+            // Удаляем конфетти после анимации
+            setTimeout(() => {
+                confetti.remove();
+            }, 2500);
+        }
+
+        console.log('🎉 Конфетти запущено!');
     }
 
     //loop
@@ -443,16 +492,16 @@ document.addEventListener('DOMContentLoaded', () => {
 //     }
 // });
 
-document.addEventListener('keydown', (e) => {
-    if (e.key === '1') window.app.startScene1();
-    if (e.key === '2') window.app.startScene2();
-    if (e.key === '3') window.app.startScene3();
-    if (e.key === 'f') window.app.requestFullscreen();
-    if (e.key === 's') {
-        CONFIG.scrollVideoEnabled = !CONFIG.scrollVideoEnabled;
-        console.log(`📜 Scroll Video: ${CONFIG.scrollVideoEnabled ? 'ON' : 'OFF'}`);
-    }
-});
+// document.addEventListener('keydown', (e) => {
+//     if (e.key === '1') window.app.startScene1();
+//     if (e.key === '2') window.app.startScene2();
+//     if (e.key === '3') window.app.startScene3();
+//     if (e.key === 'f') window.app.requestFullscreen();
+//     if (e.key === 's') {
+//         CONFIG.scrollVideoEnabled = !CONFIG.scrollVideoEnabled;
+//         console.log(`📜 Scroll Video: ${CONFIG.scrollVideoEnabled ? 'ON' : 'OFF'}`);
+//     }
+// });
 
 console.log('💡 Горячие клавиши:');
 console.log('  1, 2, 3 - переключение сцен');
