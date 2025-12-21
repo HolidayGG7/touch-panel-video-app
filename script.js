@@ -16,6 +16,9 @@ const CONFIG = {
 const elements = {
     video: document.getElementById('videoPlayer'),
     loader: document.getElementById('loader'),
+    loaderText: document.querySelector('.loader-text'),
+    loaderSpinner: document.querySelector('.spinner'),
+    startAppButton: document.getElementById('startAppButton'),
     scenes: {
         scene1: document.getElementById('scene1'),
         scene2: document.getElementById('scene2'),
@@ -50,16 +53,51 @@ class AppleOrchardApp {
     async init() {
         console.log('🍎 Инициализация приложения...');
 
-    //setup
+        //setup
         this.setupVideo();
 
         this.setupEventListeners();
 
-        this.hideLoader();
+        // Предзагрузка первого видео
+        await this.preloadFirstVideo();
 
-        this.prepareScene1();
+        // Показываем кнопку "Поехали"
+        this.showStartButton();
 
-        console.log('✅ Приложение готово! Нажмите "Начать Путешествие"');
+        console.log('✅ Приложение готово!');
+    }
+
+    async preloadFirstVideo() {
+        const { video } = elements;
+        const { loaderText } = elements;
+
+        loaderText.textContent = 'Загрузка видео...';
+
+        return new Promise((resolve) => {
+            video.src = CONFIG.videos.loop;
+            video.loop = true;
+
+            video.addEventListener('loadeddata', () => {
+                console.log('✅ Первое видео предзагружено');
+                loaderText.textContent = 'Готово!';
+                resolve();
+            }, { once: true });
+
+            video.load();
+        });
+    }
+
+    showStartButton() {
+        const { startAppButton, loaderSpinner, loaderText } = elements;
+
+        // Скрываем спиннер и текст
+        loaderSpinner.style.display = 'none';
+        loaderText.style.display = 'none';
+
+        // Показываем кнопку "Поехали"
+        setTimeout(() => {
+            startAppButton.classList.remove('hidden');
+        }, 300);
     }
 
     prepareScene1() {
@@ -71,6 +109,7 @@ class AppleOrchardApp {
         //najmite 1 dlya starta
         const { video } = elements;
         video.src = CONFIG.videos.loop;
+        video.autoplay = true;
         video.loop = true;
         video.load();
     }
@@ -98,13 +137,32 @@ class AppleOrchardApp {
     }
 
     setupEventListeners() {
-        const { buttons } = elements;
-        
+        const { buttons, startAppButton } = elements;
+
+        // Кнопка "Поехали" в loader
+        startAppButton.addEventListener('click', () => this.onStartAppClick());
+
         //start
         buttons.start.addEventListener('click', () => this.onStartClick());
-        
+
         //part 2, 3
         buttons.continue1.addEventListener('click', () => this.onContinue1Click());
+    }
+
+    onStartAppClick() {
+        console.log('👆 Клик: Поехали!');
+
+        // Скрываем loader
+        this.hideLoader();
+
+        // Подготавливаем первую сцену
+        this.prepareScene1();
+
+        // Запускаем loop видео
+        const { video } = elements;
+        video.play().catch(err => {
+            console.log('⚠️ Автоплей заблокирован:', err);
+        });
     }
 
     //loop
@@ -379,11 +437,11 @@ document.addEventListener('DOMContentLoaded', () => {
     window.app = new AppleOrchardApp();
 });
 
-document.addEventListener('fullscreenchange', () => {
-    if (!document.fullscreenElement && CONFIG.autoStartFullscreen) {
-      //nenado udalil
-    }
-});
+// document.addEventListener('fullscreenchange', () => {
+//     if (!document.fullscreenElement && CONFIG.autoStartFullscreen) {
+//       //nenado udalil
+//     }
+// });
 
 document.addEventListener('keydown', (e) => {
     if (e.key === '1') window.app.startScene1();
