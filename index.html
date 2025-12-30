@@ -12,6 +12,21 @@
     <video id="v1" class="video-layer active" muted playsinline autoplay></video>
     <video id="v2" class="video-layer" muted playsinline autoplay></video>
 
+    <audio autoplay loop id="audio-sound">
+        <source src="assets/sounds/sound.mp3" type="audio/mpeg">
+        <!-- <source src="путь_к_вашему_файлу.ogg" type="audio/ogg"> -->
+        Ваш браузер не поддерживает элемент audio.
+    </audio>
+
+
+    <audio id="audio-click">
+        <source src="assets/sounds/click.mp3" type="audio/mpeg">
+        <!-- <source src="путь_к_вашему_файлу.ogg" type="audio/ogg"> -->
+        Ваш браузер не поддерживает элемент audio.
+    </audio>
+
+      
+
     <div class="ui-layer">
         <div id="text-container"></div>
         <button id="action-btn"></button>
@@ -19,5 +34,14 @@
 </div>
 
 <script src="assets/js/main.js"></script>
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        const music = document.getElementById('audio-sound');
+        const click = document.getElementById('audio-click');
+
+        if (music) music.volume = 0.3; // Громкость фоновой музыки 10%
+        // if (click) click.volume = 0.2; // Громкость клика 20%
+    });
+</script>
 </body>
 </html>

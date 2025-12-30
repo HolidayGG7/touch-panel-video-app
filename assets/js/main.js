@@ -60,6 +60,7 @@ class InteractiveCinema {
         this.btn = document.getElementById('action-btn');
         this.textCont = document.getElementById('text-container');
         
+        
         // Таймеры для очистки
         this.resetTimer = null;
         this.btnTimer = null;
@@ -128,6 +129,7 @@ class InteractiveCinema {
     }
 
     next() {
+        document.getElementById('audio-click').play()
         this.current = (this.current + 1) % this.config.length;
         this.switchVideoLayer();
     }
