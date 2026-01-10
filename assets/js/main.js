@@ -2,10 +2,11 @@ const storyConfig = [
     {
         videoSrc: 'assets/videos/pole.mp4',
         buttonText: 'Как получить здоровый урожай?',
-        delay: 500,
+        delay: 11000,
         animationIn: 'easy-zoom-in',
         animationOut: 'fade-out',
-        overlayText: null
+        overlayText: null,
+        steps: ["Прикоснись", "к секрету", "Миравис"]
     },
     {
         videoSrc: 'assets/videos/1.mp4',
@@ -60,6 +61,7 @@ class InteractiveCinema { // shablon dlya sozdaniya obj // const u = new User('a
         this.activeIdx = 0;
         this.btn = document.getElementById('action-btn');
         this.textCont = document.getElementById('text-container');
+        this.stepsCont = document.getElementById('steps-container');
         
         
         // timer dlya ochistki
@@ -107,11 +109,49 @@ class InteractiveCinema { // shablon dlya sozdaniya obj // const u = new User('a
                 }
                 this.textCont.classList.add('show');
             }
+            
+            // (Анимация для текста-ступенка)
+            if (scene.steps) {
+                // 1. Сначала очищаем контейнер и создаем элементы на основе данных
+                this.stepsCont.innerHTML = scene.steps
+                    .map(text => `<div class="step">${text}</div>`)
+                    .join('');
+            
+                const stepsElements = this.stepsCont.querySelectorAll('.step');
+                let stepIndex = 0;
+            
+                const showNextStep = () => {
+                    const currentStep = stepsElements[stepIndex];
+            
+                    // Анимация ПОЯВЛЕНИЯ
+                    currentStep.classList.add('active');
+            
+                    // Через 2.5 секунды запускаем анимацию ИСЧЕЗНОВЕНИЯ
+                    setTimeout(() => {
+                        currentStep.classList.add('exit');
+            
+                        stepIndex++;
+                        if (stepIndex < stepsElements.length) {
+                            showNextStep();
+                        }
+                    }, 2500); // Время чтения текста
+                };
+            
+                // Запуск цикла С ПАУЗОЙ ПЕРЕД ПЕРВЫМ ТЕКСТОМ
+                if (stepsElements.length > 0) {
+                    setTimeout(() => {
+                        showNextStep();
+                    }, 2500); // Пауза перед первым шагом
+                }
+            }
+            
 
             // 5. Показ кнопки (если есть)
             if (scene.buttonText) {
                 this.btnTimer = setTimeout(() => {
                     this.btn.innerText = scene.buttonText;
+                    if (scene.buttonText == 'Как получить здоровый урожай?') this.btn.classList.add('centered');
+                    else this.btn.classList.remove('centered');
                     this.btn.classList.add('visible');
                 }, scene.delay || 0);
             }

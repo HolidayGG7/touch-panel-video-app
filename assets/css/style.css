@@ -70,7 +70,12 @@ body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden;
         font-size: 16px !important;
     }
 }
+<<<<<<< HEAD
 /* knopka */
+=======
+
+/* Кнопка */
+>>>>>>> 5f43a9a4c5f00ade41dd3869c21b2e3de6b7e516
 #action-btn {
     pointer-events: auto;
     padding: 20px 40px;
@@ -87,8 +92,83 @@ body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden;
     position: absolute;
     font-size: 18px;
     bottom: 40px;
+    z-index: 100;
+    overflow: visible;      /* важно: разрешаем пульсу выходить за границы */
 }
-#action-btn.visible { opacity: 1; transform: scale(1); }
+
+/* Пульс ПОД кнопкой */
+#action-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50px;
+    background-color: #fff;
+    animation: pulse 2s linear infinite;
+    z-index: -1;            /* слой ниже кнопки */
+    pointer-events: none;  /* не мешает кликам */
+}
+
+/* Анимация */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(1.1, 1.5);
+        opacity: 0;
+    }
+}
+
+#action-btn.centered {
+    bottom: 50%;
+    transform: translateY(50%);
+}
+
+#action-btn.visible {
+    opacity: 1;
+    transform: scale(1);
+}
+
+#steps-container {
+    position: absolute;
+    top: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.step {
+    position: absolute; /* Тексты накладываются друг на друга */
+    max-width: 400px;
+    color: white;
+    font-size: 25px;
+    font-weight: bold;
+    text-align: center;
+    
+    /* Начальное состояние (Маленький и невидимый) */
+    opacity: 0;
+    transform: scale(0.2);
+    transition: all 0.8s ease-out;
+    pointer-events: none;
+    visibility: hidden;
+}
+
+/* Анимация появления */
+.step.active {
+    visibility: visible;
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Анимация "взрыва" (увеличивается и исчезает) */
+.step.exit {
+    opacity: 0;
+    transform: scale(3);
+    transition: opacity 0.6s ease-in, transform 0.6s ease-in;
+}
 
 /* Анимации */
 .easy-zoom-in { transform: scale(1.1); animation: zoomIn 1.5s forwards; }
