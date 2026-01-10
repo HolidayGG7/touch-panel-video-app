@@ -51,8 +51,9 @@ const storyConfig = [
     }
 ];
 
-class InteractiveCinema {
-    constructor(config) {
+
+class InteractiveCinema { // shablon dlya sozdaniya obj // const u = new User('asdqwd');
+    constructor(config) { // method
         this.config = config;
         this.current = 0;
         this.videos = [document.getElementById('v1'), document.getElementById('v2')];
@@ -61,30 +62,31 @@ class InteractiveCinema {
         this.textCont = document.getElementById('text-container');
         
         
-        // Таймеры для очистки
+        // timer dlya ochistki
         this.resetTimer = null;
-        this.btnTimer = null;
+        this.btnTimer = null; 
 
-        this.btn.addEventListener('click', () => this.next());
+        this.btn.addEventListener('click', () => this.next()); // vse eshe InteractiveCinema
         
-        // Запуск первой сцены
+        // zapusk pervoy sceni
         this.renderScene();
     }
 
-    get currentVideo() { return this.videos[this.activeIdx]; }
+    get currentVideo() { return this.videos[this.activeIdx]; }  // get svoystvo no rabotaet kak function
     get nextVideo() { return this.videos[1 - this.activeIdx]; }
+    // this.video = [v1,v2];
 
-    renderScene() {
+    renderScene() { // renderit vse, zagrujaet, zapuskaet video, pokazivaet tekst, knopku, taymeri, avtosbros
         const scene = this.config[this.current];
         const videoTag = this.currentVideo;
 
-        // 1. Сброс UI
         this.btn.classList.remove('visible');
         this.textCont.classList.remove('show');
         if (this.resetTimer) clearTimeout(this.resetTimer);
         if (this.btnTimer) clearTimeout(this.btnTimer);
+        
 
-        // 2. Установка видео
+        // ustanovka video
         videoTag.src = scene.videoSrc;
         videoTag.load();
 
