@@ -73,7 +73,7 @@ body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden;
 #action-btn {
     pointer-events: auto;
     padding: 20px 40px;
-    background: #000;
+    background: #0072ce;
     color: #fff;
     border: none;
     border-radius: 50px;
